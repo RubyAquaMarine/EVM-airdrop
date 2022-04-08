@@ -1,3 +1,4 @@
+
 App = {
     init: async () => {
         return await App.initWeb3()
@@ -9,7 +10,8 @@ App = {
             if (provider) {
                 App.web3 = new Web3(provider)
             } else {
-                App.web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/94890e5bd20040fe861e18da383bb492"))
+                //
+                App.web3 = new Web3(new Web3.providers.HttpProvider("https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague"))
             }
             return App.initContracts()
         } catch (error) {
@@ -42,36 +44,37 @@ App = {
     initContracts: async () => {
         App.networkId = await App.web3.eth.net.getId()
 
-        if (App.networkId !== 1) {
-            $("#submit").attr("disabled", true)
-            alert ("Please switch your Metamask node to Mainnet");
-            return
-        }
+        //   if (App.networkId !== 1) {
+        //        $("#submit").attr("disabled", true)
+        //        alert ("Please switch your Metamask node to Mainnet");
+        //        return
+        //    }
 
-        App.airdropAddress = "0x94080Ed2F72967554D2a6Bf1DD6f678e498DdB29"
-        App.airdropABI = [{"constant":false,"inputs":[{"name":"addresses","type":"address[]"},{"name":"values","type":"uint256[]"}],"name":"doAirdrop","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"token","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"}]
+        App.airdropAddress = "0xf9a572372ba74B52cfe027aFB653f793cB915B12"
+        App.airdropABI = [{ "constant": false, "inputs": [{ "name": "addresses", "type": "address[]" }, { "name": "values", "type": "uint256[]" }], "name": "doAirdrop", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "token", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }]
         App.airdropInstance = new App.web3.eth.Contract(App.airdropABI, App.airdropAddress)
 
         App.tokenAddress = await App.airdropInstance.methods.token().call()
-        App.tokenABI = [{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"who","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}],
-        App.tokenInstance = new App.web3.eth.Contract(App.tokenABI, App.tokenAddress)
+        App.tokenABI = [{ "constant": false, "inputs": [{ "name": "spender", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "from", "type": "address" }, { "name": "to", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "transferFrom", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "who", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "to", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "owner", "type": "address" }, { "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "from", "type": "address" }, { "indexed": true, "name": "to", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Transfer", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "name": "owner", "type": "address" }, { "indexed": true, "name": "spender", "type": "address" }, { "indexed": false, "name": "value", "type": "uint256" }], "name": "Approval", "type": "event" }],
+            App.tokenInstance = new App.web3.eth.Contract(App.tokenABI, App.tokenAddress)
 
         return App.initVariables()
     },
 
     initVariables: async () => {
-        App.ownerAddress = "0xB5869587CA6E239345f75C28d3b8Ee23da812759"
+        App.ownerAddress = "0xfD6D3ab833f312B3CE7344D234832574Ad94B8e8"
         App.account = await App.web3.eth.getAccounts().then(accounts => accounts[0])
+        //checks the allowance on the TokenAddress within the contract wtf 
         App.allowance = App.web3.utils.fromWei(await App.tokenInstance.methods.allowance(App.ownerAddress, App.airdropAddress).call(), 'ether')
         if (localStorage.getItem("transactions") === null) {
             localStorage.setItem("transactions", JSON.stringify([]))
         }
         return App.render()
     },
-
+    // RENDERS showAllowance and showTransactions using the data from the initVariables
     showAllowance: () => {
         const amount = App.allowance
-        $('#allowance').text(amount > 0 ? amount + " EVOT" : '0. (Please allow more tokens for ' + App.airdropAddress + ' contract.)')
+        $('#allowance').text(amount > 0 ? amount + " RUBY" : '0. (Please allow more tokens for ' + App.airdropAddress + ' contract.)')
         $('#owner-wallet').text(App.ownerAddress)
     },
 
@@ -154,6 +157,13 @@ App = {
                     id: 42
                 }
                 break
+            case 2255010950618556:
+                return {
+                    network: "Europa",
+                    url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
+                    id: 2255010950618556
+                }
+                break
             default:
                 console.log('This is an unknown network.')
         }
@@ -178,6 +188,7 @@ App = {
 
     startAirdrop: () => {
         let amounts = []
+        let newAmounts = []
         let receivers = []
         let totalAmount = 0
 
@@ -185,13 +196,14 @@ App = {
             // Replacing and creating 'receivers' array
             $('#receivers').val().split(',').forEach((address, i) => {
                 if (/\S/.test(address)) {
+                    console.log("address:", address)
                     address = address.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '')
 
                     // Checksuming the addresses
                     address = App.web3.utils.toChecksumAddress(address)
 
                     // Checking if address is valid
-                    if(App.web3.utils.isAddress(address)) {
+                    if (App.web3.utils.isAddress(address)) {
                         receivers.push(address)
                     } else {
                         throw ('Founded wrong ETH address, please check it \n\n' + address)
@@ -202,55 +214,84 @@ App = {
             // Replacing and creating 'amounts' array
             amounts = $('#amounts').val().split(',').map(value => {
                 if (Number(value) !== 0) {
-                       return Number(value)
-                   } else {
-                        throw ('Founded  number 0 in amounts, please remove it');
-                   }
-               })
+                    return Number(value)
+                } else {
+                    throw ('Founded  number 0 in amounts, please remove it');
+                }
+            })
+            console.log("amounts:", amounts)
 
             // Checking arrays length and validities
-            if(receivers.length == 0 || amounts.length == 0 || receivers.length != amounts.length || receivers.length > 150 || amounts.length > 150) {
+            if (receivers.length == 0 || amounts.length == 0 || receivers.length != amounts.length) {
                 throw ('Issue with receivers/amount values')
             }
 
 
             // Calculating total sum of 'amounts' array items
             totalAmount = parseFloat(amounts.reduce((a, b) => a + b).toFixed(2))
+            console.log("totalAmount:", totalAmount)
+            console.log("App.allowance:", App.allowance)
+
+            // to wei
+            amounts.forEach(myFunction)
+
+            function myFunction(item, index, arr) {
+                arr[index] = Number(App.web3.utils.toWei(item.toString(), 'ether'))
+            }
+
+            console.log("tFINAL amounts:", amounts)
+
+
 
             // If allowance tokens more than amounts sum then continue
-            if(App.allowance >= totalAmount) {
+            if (App.allowance >= totalAmount) {
+
+                //mod - ethers
+                //amounts = ethers.utils.parseUnits(amounts, 'ether');// works
+                //console.log("parseUnits Amount: ", amounts.toString())
+                // web3.utils.toWei(number [, unit])
+                // array with numbers, need to make a new array with BigNumbers
+                // amounts.forEach(myFunction)
+
+                // function myFunction(item, index, arr) {
+                //     arr[index] = App.web3.utils.toWei(item,'ether')
+                //   }
+                //amount App.web3.utils.toWei(amounts,'ether')
+
+
+
                 // Calling the method from airdrop smart contract
                 App.airdropInstance.methods.doAirdrop(receivers, amounts).send({ from: App.account })
-                .on("transactionHash", hash => {
-                    App.alertInReload(true)
-                    const newTx = {
-                        hash,
-                        status: "Pending",
-                        users: receivers.length,
-                        amount: totalAmount
-                    }
-                    let transactions = JSON.parse(localStorage.getItem("transactions"))
-                    transactions.unshift(newTx)
-                    localStorage.setItem("transactions", JSON.stringify(transactions))
-                    App.showTransactions()
-                })
-                .on("receipt", receipt => {
-                    App.alertInReload(false)
+                    .on("transactionHash", hash => {
+                        App.alertInReload(true)
+                        const newTx = {
+                            hash,
+                            status: "Pending",
+                            users: receivers.length,
+                            amount: totalAmount
+                        }
+                        let transactions = JSON.parse(localStorage.getItem("transactions"))
+                        transactions.unshift(newTx)
+                        localStorage.setItem("transactions", JSON.stringify(transactions))
+                        App.showTransactions()
+                    })
+                    .on("receipt", receipt => {
+                        App.alertInReload(false)
 
-                    App.allowance -= totalAmount
+                        App.allowance -= totalAmount
 
-                    const hash = receipt.transactionHash
-                    const transactions = JSON.parse(localStorage.getItem("transactions"))
-                    const txIndex = transactions.findIndex(tx => tx.hash === hash);
-                    transactions[txIndex].status = "Done"
+                        const hash = receipt.transactionHash
+                        const transactions = JSON.parse(localStorage.getItem("transactions"))
+                        const txIndex = transactions.findIndex(tx => tx.hash === hash);
+                        transactions[txIndex].status = "Done"
 
-                    localStorage.setItem("transactions", JSON.stringify(transactions))
-                    App.render()
-                })
-                .on("error", error => {
-                    App.alertInReload(false)
-                    throw ("Tx was failed")
-                })
+                        localStorage.setItem("transactions", JSON.stringify(transactions))
+                        App.render()
+                    })
+                    .on("error", error => {
+                        App.alertInReload(false)
+                        throw ("Tx was failed")
+                    })
             } else {
                 throw ('You havent enough tokens for airdrop, please approve more tokens, restart the page and try again.')
             }
@@ -260,7 +301,7 @@ App = {
     }
 }
 
-$(window).on("load", () =>{
+$(window).on("load", () => {
     $.ready.then(() => {
         App.init()
     })

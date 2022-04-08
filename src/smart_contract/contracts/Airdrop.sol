@@ -1,4 +1,5 @@
-pragma solidity 0.5.3;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.4;
 
 /**
  * @title ERC20 interface
@@ -26,7 +27,7 @@ interface IERC20 {
  * @title ERC20 Airdrop dapp smart contract
  */
 contract Airdrop {
-  IERC20 public token = IERC20(0x5dE805154A24Cb824Ea70F9025527f35FaCD73a1);
+  IERC20 public token = IERC20(0x83B38f79cFFB47CF74f7eC8a5F8D7DD69349fBf7);
 
   /**
    * @dev doAirdrop is the main method for distribution

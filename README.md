@@ -23,7 +23,7 @@ With this app, you can transfer your token until to 150 **limitation removed and
 - 
 
 # Skale v2 testnet
-[!img](https://raw.githubusercontent.com/RubyAquaMarine/Easy_Airdrop_dApp/master/img/limitAt5100.png)
+![img](https://raw.githubusercontent.com/RubyAquaMarine/Easy_Airdrop_dApp/master/img/limitAt5100.png)
 
 
 

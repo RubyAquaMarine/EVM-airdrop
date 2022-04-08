@@ -1,12 +1,14 @@
-# Decentrilized app for ERC20/ERC223 token airdrop
+# ERC20 token airdrop
 
-With this app, you can transfer your token until to 150 **limitation removed and tested to output 1289 transfers**  addresses at once, simple UI, configurations and features. <br><br>
-- lacking 
+With this app, you can transfer your token until to 150 **limitation removed and tested to output 2400 transfers**  addresses at once, simple UI, configurations and features. <br><br>
+
+**aquamarine** more notes:
 - need to make contract **airdrop.sol** universal, similar to vesting contracts (any token can be sent)
 - ui needs button to deploy the contract similar to vesting ui
 - ui needs to fetch the contract address and be displayed 
-## How to run the project
 
+## How to run the project
+**improved**
 * Clone repo
 * Open ./src/Airdrop.sol
 * Change the token contract address with the token address that you want to airdrop **each deploy hardcoded to one token**

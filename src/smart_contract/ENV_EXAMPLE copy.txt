@@ -1,0 +1,8 @@
+ADMIN_PKEY_WHISPER =
+ADMIN_PKEY_TESTNET = 
+MM_PKEY_TESTNET = 
+LOCAL_PKEY = 
+RPC_LOCAL = http://localhost:8545
+RPC_SKALE = https://dappnet-api.skalenodes.com/v1/melodic-murzim
+RPC_SKALE_HUB = https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague
+RPC_SKALE_WHISPER = https://testnet-proxy.skalenodes.com/v1/whispering-turais

@@ -38,6 +38,10 @@ module.exports = {
       url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
       accounts: [process.env.MM_PKEY_TESTNET]
     },
+    skaleTestnet2: {
+      url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
+      accounts: [process.env.ADMIN_PKEY_WHISPER]
+    },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       accounts: [process.env.MM_PKEY_TESTNET]
@@ -58,7 +62,9 @@ module.exports = {
         },
         
       },
-      { version: "0.8.4" }
+      { version: "0.8.4" },
+      { version: "0.8.10" },
+      { version: "0.8.0" }
     ],
   }
 };

@@ -6,7 +6,8 @@
 const hre = require("hardhat");
 
 async function main() {
-  const SimulateTx = await hre.ethers.getContractFactory("Airdrop");
+  // Contract name within .sol
+  const SimulateTx = await hre.ethers.getContractFactory("AirdropV2");//AirdropV2
   const simulateTx = await SimulateTx.deploy();
   await simulateTx.deployed();
   console.log("simulateTx to:", simulateTx.address);

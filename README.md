@@ -1,46 +1,26 @@
-## Ruby Address
-- 0x83B38f79cFFB47CF74f7eC8a5F8D7DD69349fBf7
-
-## DAI address
-- 0x4C45A6F9bB79977eF655b4147C14F9f40424ef00
-
 # ERC20 token airdrop
+1. Confirm AirDrop Contact deployment within metamask
+2. Enter token Address that will be used for the transfer
+3. Click ```Save Token Address```
+4. Smile, this is easy
+5. Paste the addresses and then amounts
+6. Separate the items with a comma, as in the example
+7. Length of receivers and amounts must be equal
+8. Click ```Proceed``` and ```Confirm``` within Metamask
+9. Approval Status will update to ```Tokens Approved```
+10. Click ```Proceed``` again and ```Confirm``` within Metamask to airdrop tokens
+11. Wait for tx Status to change from ```Pending``` to ```Done```
 
-With this app, you can transfer your token until to 150 **limitation removed and tested to output 2400 transfers**  addresses at once, simple UI, configurations and features. <br><br>
-
-**aquamarine** more notes:
-- need to make contract **airdrop.sol** universal, similar to vesting contracts (any token can be sent)
-- ui needs button to deploy the contract similar to vesting ui **done:automatically**
-- ui needs to fetch the contract address and be displayed **done:automatically**
-
-## How to run the project
-**out of date**
-* Clone repo
-* Open ./src/Airdrop.sol
-* Change the token contract address with the token address that you want to airdrop **each deploy hardcoded to one token**
-* Deploy the smart_contract npx hardhat compile (README2.md) **only for SC mods** 
-* Allow to airdrop contract address to spend the X your tokens %&$^#* notes: **built script** working, need to change the check allowance logic and approval method(missing)**done**
-* Go to ./src/script and edit the lines N 5,10,11,12 related to your addresses **deployedContractAddress&owner:recoded:done**
-* Go to ./ and run "npm start"
-* Open the browser and type localhost:3000
-
-# aquamarine
-- ui needs improvements but first => **styling guide**
-- need to make contract **airdrop.sol** universal, similar to vesting contracts (any token can be sent) - ```done```
-* ISSUE: Change the token contract address with the token address that you want to airdrop **each airdrop.sol deploy is hardcoded to one token** - ```fixed```
-- Europa ```prod``` will need to be hardcoded to 1 ```airdropv2.sol``` make another branch ```europa```
 ## new logic and approval
 - When user connects the App deploys a new smartcontact will be deployed after metamask approval (works with any l2: rinkeby failed from slow pending tx(error handling))
 - The app with now prompt metamask to approve the totalAmount 
 - Approval is confirmed and user can then call the Airdrop smartcontact for token transfer (metaMask prompt)
 ## what changed
-- smart contracts are now deployed automatically. The ./src/smart_contract hardhat was used to create the abi and bytecode. Also for easy SC mods (upgraded to AirDropV2.sol). extra notes in ```README2```
+- smart contracts are now deployed automatically. The ./src/smart_contract hardhat was used to create the ```abi``` and ```bytecode``` (upgraded to AirDropV2.sol). extra notes in ```README2```
 ## Skale v2 testnet
 - 2500 transfers within 1 block: https://fancy-rasalhague.testnet-explorer.skalenodes.com/tx/0x45c814773331bd66638c514be4765f154b9431602e7ff696e151b9dc35a0ce1c/token-transfers
 - increase gasLimit and try more txs ^^
 ![img](https://raw.githubusercontent.com/RubyAquaMarine/Easy_Airdrop_dApp/master/img/limitAt5100.png)
-
-
 
 
 ## Europa 
@@ -48,6 +28,10 @@ With this app, you can transfer your token until to 150 **limitation removed and
 - BlockExplorer: 
 - ChainID: 
 - token: ```sFUEL```
+- token DAI 
+- - 0x4C45A6F9bB79977eF655b4147C14F9f40424ef00
+- token RUBY
+- - 0x83B38f79cFFB47CF74f7eC8a5F8D7DD69349fBf7
 
 # Instructions: latest
 - git clone, cd airdropper
@@ -56,8 +40,9 @@ With this app, you can transfer your token until to 150 **limitation removed and
 - Universal: Any evm network and any erc20 token can be used.
 - limitation for airdrop receiver list is subject to gasCosts on other networks.
 
-## app.js line 186
-- update network with case == chainID
+## Add new network
+app.js line 186
+- add another network by using the ```case``` number matching the  ```chainID```
 ```
 case 1:
                 return {
@@ -67,27 +52,31 @@ case 1:
                 }
                 break
 ```
+such as 
+```
+case 132333505628089:
+                return {
+                    network: "Schain Whispering-turails",
+                    url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
+                    id: 132333505628089
+                }
+                break
+```
+
 
 # schain v2
-► RPC Endpoints
-https://testnet-proxy.skalenodes.com/v1/whispering-turais
-wss://testnet-proxy.skalenodes.com/v1/ws/whispering-turais
-
-► Filestorage: https://testnet-proxy.skalenodes.com/fs/whispering-turais
-
-► Chain ID: 132333505628089 | 0x785b4b9847b9
-
 ► Block Explorer:
 https://whispering-turais.testnet-explorer.skalenodes.com
 
 
 # Skale Schain Owners
+The schain owners will need to adjust setting within the ```configController```
 ## FreeContractDeployment Off
-- if schain owner doesn't allow ```FreeContractDeployment``` , then deploy ```smart_contract``` and hardwire contract address #106 at ```src/scripts/app.js``` and code example that needs mod: ```App.airdropAddress = App.sc_address``` to ```App.airdropAddress = 'deployedAirDropAddress'``` and remove the previous deployment logic #52-104  at ```src/scripts/app.js```
+- if schain owner doesn't allow ```FreeContractDeployment``` , then deploy ```smart_contract``` and hardwire contract address within file ```src/scripts/app.js``` and edit line #106 : ```App.airdropAddress = App.sc_address``` to ```App.airdropAddress = 'deployedAirDropAddress'``` and remove the previous deployment logic at line #52-104
 
 ## FreeContractDeployment On
 - the metamask user can switch to any schain network and refresh the webpage to redeploy a new airdrop contract
-- requirements: only if schain owner allows **enableFreeContractDeployment** and **isFCDEnabled()**  within the **configController** contract
+- requirements: only if schain owner allows ```enableFreeContractDeployment`` and ```isFCDEnabled()```  within the ```configController``` contract
 
 ## s2s
 [docs]https://deploy-preview-11--devportal-v2.netlify.app/ima/1.2.x/s2s-transferring-erc20#setup  
@@ -102,9 +91,9 @@ whitelisting only controls the tokens from are allowed from l1 to l2. I'm not su
 - ```addERC20TokenByOwner``` (manual mapping. when to use this, how does it work)
 - ```allowInterchainConnections``` connect several chains to the same IMA bridge contracts (same owner) , how is this useful? possible scenario
 
-## run some tests
-- make 2 erc20 tokens on whispering with different decimals and send them to the europa hub. wait, i can't send gametoken to europa because because i don't know the origin tokenaddress.
-then that makes every token MUST go from L1 to Europa (token must exist on europa then its transfered to gameDapp, and then gameSchain can send gameToken to Europa)
+# aquamarine
+- ui needs improvements: need ```styling guide```
+- Europa ```prod``` will need to be hardcoded to 1 ```airdropv2.sol``` make another branch ```europa```
 
 
 

@@ -81,48 +81,22 @@ App = {
                 "type": "function"
             }
         ]
-
-        App.sc_bytecode = "0x608060405234801561001057600080fd5b5061054a806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c80632f1afbac14610030575b600080fd5b61004a600480360381019061004591906102f7565b610060565b60405161005791906103fe565b60405180910390f35b60008060009050866000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b858590508110156102035760008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166323b872dd33888885818110610129577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b905060200201602081019061013e91906102ce565b878786818110610177577f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b905060200201356040518463ffffffff1660e01b815260040161019c939291906103c7565b602060405180830381600087803b1580156101b657600080fd5b505af11580156101ca573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906101ee9190610380565b506001816101fc9190610419565b90506100a8565b8091505095945050505050565b60008135905061021f816104e6565b92915050565b60008083601f84011261023757600080fd5b8235905067ffffffffffffffff81111561025057600080fd5b60208301915083602082028301111561026857600080fd5b9250929050565b60008083601f84011261028157600080fd5b8235905067ffffffffffffffff81111561029a57600080fd5b6020830191508360208202830111156102b257600080fd5b9250929050565b6000815190506102c8816104fd565b92915050565b6000602082840312156102e057600080fd5b60006102ee84828501610210565b91505092915050565b60008060008060006060868803121561030f57600080fd5b600061031d88828901610210565b955050602086013567ffffffffffffffff81111561033a57600080fd5b61034688828901610225565b9450945050604086013567ffffffffffffffff81111561036557600080fd5b6103718882890161026f565b92509250509295509295909350565b60006020828403121561039257600080fd5b60006103a0848285016102b9565b91505092915050565b6103b28161046f565b82525050565b6103c1816104ad565b82525050565b60006060820190506103dc60008301866103a9565b6103e960208301856103a9565b6103f660408301846103b8565b949350505050565b600060208201905061041360008301846103b8565b92915050565b6000610424826104ad565b915061042f836104ad565b9250827fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff03821115610464576104636104b7565b5b828201905092915050565b600061047a8261048d565b9050919050565b60008115159050919050565b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000819050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b6104ef8161046f565b81146104fa57600080fd5b50565b61050681610481565b811461051157600080fd5b5056fea2646970667358221220e779ac8fa2598950e1a7c7cb2c03848890960275aaeb6e9501cb61f919d7c54664736f6c63430008040033"
-        App.sc_deploy = new App.web3.eth.Contract(App.sc_abi);// JSON.parse(abi)
-        
-        App.sc_payload = {
-            data: App.sc_bytecode
-        }
-
-        App.sc_parameter = {
-            from: App.ownerAddressB[0],
-            gasPrice: App.gas_price.toString(),
-            gaLimit: '3141592000000'
-        }
-
-        await App.sc_deploy.deploy(App.sc_payload).send(App.sc_parameter, (err, transactionHash) => {
-            console.log('Transaction Hash :', transactionHash);
-            console.log('Transaction Hash Err:', err);
-        }).on('confirmation', () => { }).then((newContractInstance) => {
-            console.log('Deployed Contract Address : ', newContractInstance.options.address);
-            App.sc_address = newContractInstance.options.address
-        })
-
-        App.airdropAddress = App.sc_address
+        /*
+        * PROD | Hardcode Airdrop contract address here: App.airdropAddress
+        */
+        App.airdropAddress = "0x1b00f26d2492b101bd5440c6472155bd48412fd0"
         console.log('App.airdropAddress:', App.airdropAddress)
-       // App.airdropABI = [{ "constant": false, "inputs": [{ "name": "addresses", "type": "address[]" }, { "name": "values", "type": "uint256[]" }], "name": "doAirdrop", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "token", "outputs": [{ "name": "", "type": "address" }], "payable": false, "stateMutability": "view", "type": "function" }]
-        App.airdropInstance = new App.web3.eth.Contract(App.sc_abi , App.airdropAddress)
-
-
-      
-
+        App.airdropInstance = new App.web3.eth.Contract(App.sc_abi, App.airdropAddress)
         return App.initVariables()
     },
 
-        // Checks for the Token Address here , but user can't edit init, so ....
-            // remove from this function and make a button to set the variable
+    // Checks for the Token Address here , but user can't edit init, so ....
+    // remove from this function and make a button to set the variable
     initVariables: async () => {
         App.ownerAddress = App.ownerAddressB[0]
         App.isTokenApproved = 'Not Approved'
         console.log('App.ownerAddress:', App.ownerAddress)
         App.account = await App.web3.eth.getAccounts().then(accounts => accounts[0])
-        //checks the allowance on the TokenAddress within the contract wtf 
-        // App.allowance = App.web3.utils.fromWei(await App.tokenInstance.methods.allowance(App.ownerAddress, App.airdropAddress).call(), 'ether')
         if (localStorage.getItem("transactions") === null) {
             localStorage.setItem("transactions", JSON.stringify([]))
         }
@@ -137,8 +111,6 @@ App = {
         $('#token-approval').text(App.isTokenApproved)
         $('#owner-wallet').text(App.ownerAddress)
         $('#contract-address').text(App.airdropAddress)
-       // const amount = App.allowance
-       // $('#allowance').text(amount > 0 ? amount + " RUBY" : '0. (Please allow more tokens for ' + App.airdropAddress + ' contract.)')
     },
 
     showTransactions: () => {
@@ -228,15 +200,15 @@ App = {
                 }
                 break
             case 132333505628089:
-                    return {
-                        network: "Whisper",
-                        url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
-                        id: 132333505628089
-                    }
-                    break
+                return {
+                    network: "Whisper",
+                    url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
+                    id: 132333505628089
+                }
+                break
             default:
                 console.log('This is an unknown networkID: ', App.networkId)
-                //setup default
+            //setup default
         }
     },
 
@@ -488,28 +460,6 @@ App = {
         App.render()
     },
 
-    // For Button : removed 
-    /*
-        approveTokens: async (amount) => {
-    
-            if (amount == undefined) {
-                App.approvalAmount = Number(App.web3.utils.toWei(App.approvalThisAmount.toString(), 'ether'))
-            } else {
-                App.approvalAmount = Number(App.web3.utils.toWei(amount.toString(), 'ether'))
-            }
-    
-            console.log("approveTokens() App.approvalAmount:", App.approvalAmount)
-            console.log("approveTokens() App.airdropAddress:", App.airdropAddress)
-    
-            // not coded correctly and throwing this error, i think no signer
-            //function _transfer(address sender, address recipient, uint256 amount) private {
-            //require(sender != address(0), "ERC20: transfer from the zero address");
-    
-            await App.tokenInstance.methods.approve(App.airdropAddress, App.approvalAmount).send({ from: App.account })
-            App.allowance = App.approvalAmount
-            console.log("App.allowance Updated to:", App.allowance)
-        },
-    */
     startAirdrop: () => {
         let amounts = []
         let receivers = []
@@ -552,9 +502,9 @@ App = {
             // Calculating total sum of 'amounts' array items for approval amount
             totalAmount = parseFloat(amounts.reduce((a, b) => a + b).toFixed(2))
             console.log("Total Amount to Airdrop: ", totalAmount)
-           
+
             // do approval now (force each time)
-            if (App.allowance < totalAmount || App.allowance == undefined|| App.allowance != totalAmount  ) {
+            if (App.allowance < totalAmount || App.allowance == undefined || App.allowance != totalAmount) {
                 console.log("Approving Token Amount: ", totalAmount)
                 // approve
                 // string input : totalamoount (humanReadable)
@@ -593,7 +543,7 @@ App = {
                 // Calling the method from airdrop smart contract
 
                 // added : App.tokenAddress
-                App.airdropInstance.methods.doAirdrop(App.tokenAddress,receivers, amounts).send({ from: App.account })
+                App.airdropInstance.methods.doAirdrop(App.tokenAddress, receivers, amounts).send({ from: App.account })
                     .on("transactionHash", hash => {
                         App.alertInReload(true)
                         const newTx = {

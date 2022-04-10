@@ -70,10 +70,8 @@ https://whispering-turais.testnet-explorer.skalenodes.com
 
 # aquamarine: deployment
 - ui needs improvements: need ```styling guide```
-- ISSUE: deploy ```smart_contract``` and hardwire contract address within file ```src/scripts/app.js``` and edit line #106 : ```App.airdropAddress = App.sc_address``` to ```App.airdropAddress = 'deployedAirDropAddress'``` and remove the previous deployment logic at line #52-104
-- make another branch ```europa```
-- Europa ```prod``` will be hardcoded to 1 ```airdropv2.sol``` deployed contract(static address). No need to mint additional contracts(per user)
-- grant ```deployer factory contract``` permission
+- Europa ```prod``` will be hardcoded to 1 ```airdropv2.sol``` deployed contract(static address). No need to mint additional contracts(per user). see README2.md in ```./src/smart_contract```
+- grant ```deployer factory contract``` permission. or deploy with backend ```PKEY```
 
 
 

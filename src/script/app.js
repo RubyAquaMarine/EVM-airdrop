@@ -90,8 +90,6 @@ App = {
         return App.initVariables()
     },
 
-    // Checks for the Token Address here , but user can't edit init, so ....
-    // remove from this function and make a button to set the variable
     initVariables: async () => {
         App.ownerAddress = App.ownerAddressB[0]
         App.isTokenApproved = 'Not Approved'
@@ -102,7 +100,7 @@ App = {
         }
         return App.render()
     },
-    // RENDERS showAllowance and showTransactions using the data from the initVariables
+
     showAllowance: () => {
         // token address from ui
         //userTokenSelect

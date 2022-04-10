@@ -1,5 +1,5 @@
 # ERC20 token airdrop
-1. Confirm AirDrop Contact deployment within metamask
+1. Connect to metamask
 2. Enter token Address that will be used for the transfer
 3. Click ```Save Token Address```
 4. Smile, this is easy
@@ -12,18 +12,17 @@
 11. Wait for tx Status to change from ```Pending``` to ```Done```
 
 ## new logic and approval
-- When user connects the App deploys a new smartcontact : requires metamask ```approval``` and ```sFuel``` for tx gas
-- The app with now prompt metamask to approve the totalAmount 
+- The app with now prompt metamask to approve the totalAmount after the user adds the ```addresses``` and ```ammounts```
 - Approval is confirmed and user can then call the Airdrop smartcontact for token transfer (metaMask prompt)
 ## what changed
-- smart contracts are now deployed automatically. The ./src/smart_contract hardhat was used to create the ```abi``` and ```bytecode``` (upgraded to AirDropV2.sol). extra notes in ```README2```
+- PROD: notes in ```README2``` for SC deployment
 ## Skale v2 testnet
 - 2500 transfers within 1 block: https://fancy-rasalhague.testnet-explorer.skalenodes.com/tx/0x45c814773331bd66638c514be4765f154b9431602e7ff696e151b9dc35a0ce1c/token-transfers
 - increase gasLimit and try more txs ^^
 ![img](https://raw.githubusercontent.com/RubyAquaMarine/Easy_Airdrop_dApp/master/img/limitAt5100.png)
 
 
-## Europa 
+## Europa TestNet
 - RPC: https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague
 - BlockExplorer: https://fancy-rasalhague.testnet-explorer.skalenodes.com
 - ChainID: 2255010950618556
@@ -36,11 +35,11 @@
 # Instructions: latest
 - git clone, cd airdropper
 - npm install , npm run 
-- requires no .env , no private keys, no rpc hardcode, no contract addresses. contracts are deployed after  metmask connection and Confirm (deploy airdrop.sol to the connected rpc network).
+- requires SC deployment, hardcode Airdrop address at line #87
 - Universal: Any evm network and any erc20 token can be used.
 - limitation for airdrop receiver list is subject to gasCosts on other networks.
 
-## Add new network
+## PROD | Add new network
 app.js line 186
 - add another network by using the ```case``` number matching the  ```chainID```
 ```
@@ -63,15 +62,12 @@ case 132333505628089:
                 break
 ```
 
-# schain v2
-► Block Explorer:
-https://whispering-turais.testnet-explorer.skalenodes.com
-
-
-# aquamarine: deployment
+# deployment
 - ui needs improvements: need ```styling guide```
-- Europa ```prod``` will be hardcoded to 1 ```airdropv2.sol``` deployed contract(static address). No need to mint additional contracts(per user). see README2.md in ```./src/smart_contract```
-- grant ```deployer factory contract``` permission. or deploy with backend ```PKEY```
+- Europa ```prod``` will be hardcoded to 1 ```airdropv2.sol``` deployed contract(static address). No need to mint additional contracts(per user). 
+- cd/ into ```./src/smart_contract``` and ```npx hardhat run scripts/deploy.js``` , copy address from terminal and paste into ./scr/script/app.js
+- add new network id
+- grant ```deployer factory contract``` permission. or deploy along with backend ```PKEY```
 
 
 

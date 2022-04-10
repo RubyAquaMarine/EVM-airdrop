@@ -31,10 +31,10 @@ contract AirdropV2 {
 
   /**
    * @dev doAirdrop is the main method for distribution
+   * @param tokenAddress address ERC20 token to airdrop
    * @param addresses address[] addresses to airdrop
    * @param values address[] values for each address
    */
-   //external override onlyOwner 
   function doAirdrop(address tokenAddress, address[] calldata addresses, uint256 [] calldata values) external returns (uint256) {
     uint256 i = 0;
     token = IERC20(tokenAddress);

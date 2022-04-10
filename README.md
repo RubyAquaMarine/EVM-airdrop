@@ -12,7 +12,7 @@
 11. Wait for tx Status to change from ```Pending``` to ```Done```
 
 ## new logic and approval
-- When user connects the App deploys a new smartcontact will be deployed after metamask approval (works with any l2: rinkeby failed from slow pending tx(error handling))
+- When user connects the App deploys a new smartcontact : requires metamask ```approval``` and ```sFuel``` for tx gas
 - The app with now prompt metamask to approve the totalAmount 
 - Approval is confirmed and user can then call the Airdrop smartcontact for token transfer (metaMask prompt)
 ## what changed
@@ -24,9 +24,9 @@
 
 
 ## Europa 
-- RPC: 
-- BlockExplorer: 
-- ChainID: 
+- RPC: https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague
+- BlockExplorer: https://fancy-rasalhague.testnet-explorer.skalenodes.com
+- ChainID: 2255010950618556
 - token: ```sFUEL```
 - token DAI 
 - - 0x4C45A6F9bB79977eF655b4147C14F9f40424ef00
@@ -63,37 +63,17 @@ case 132333505628089:
                 break
 ```
 
-
 # schain v2
 ► Block Explorer:
 https://whispering-turais.testnet-explorer.skalenodes.com
 
 
-# Skale Schain Owners
-The schain owners will need to adjust setting within the ```configController```
-## FreeContractDeployment Off
-- if schain owner doesn't allow ```FreeContractDeployment``` , then deploy ```smart_contract``` and hardwire contract address within file ```src/scripts/app.js``` and edit line #106 : ```App.airdropAddress = App.sc_address``` to ```App.airdropAddress = 'deployedAirDropAddress'``` and remove the previous deployment logic at line #52-104
-
-## FreeContractDeployment On
-- the metamask user can switch to any schain network and refresh the webpage to redeploy a new airdrop contract
-- requirements: only if schain owner allows ```enableFreeContractDeployment`` and ```isFCDEnabled()```  within the ```configController``` contract
-
-## s2s
-[docs]https://deploy-preview-11--devportal-v2.netlify.app/ima/1.2.x/s2s-transferring-erc20#setup  
-
-- ```default settings``` are: whitelisting enabled, automatic deployment disabled
-- enable automatic deploy on the origin chain (chain owner) with ```tokenManagerContract.enableAutomaticDeploy()```
-- connect the target schain to the origin chain with ```tokenManagerLinkerContract.connectSchain('schain-name')```
-- enableMTM() - enables MTM on SKALE Chain? [link](https://github.com/skalenetwork/docs.skale.network/blob/1b80628012e8612fe15096e0aaf5b26d0ba5bcf4/components/develop/modules/ROOT/pages/skale-chain-access-control.adoc)
-## ima permissions
-whitelisting only controls the tokens from are allowed from l1 to l2. I'm not sure if the whitelisting controls 2s2  
-- [link](https://deploy-preview-11--devportal-v2.netlify.app/ima/1.2.x/access-control#_owner_ima_mainnet_permissions)
-- ```addERC20TokenByOwner``` (manual mapping. when to use this, how does it work)
-- ```allowInterchainConnections``` connect several chains to the same IMA bridge contracts (same owner) , how is this useful? possible scenario
-
-# aquamarine
+# aquamarine: deployment
 - ui needs improvements: need ```styling guide```
-- Europa ```prod``` will need to be hardcoded to 1 ```airdropv2.sol``` make another branch ```europa```
+- ISSUE: deploy ```smart_contract``` and hardwire contract address within file ```src/scripts/app.js``` and edit line #106 : ```App.airdropAddress = App.sc_address``` to ```App.airdropAddress = 'deployedAirDropAddress'``` and remove the previous deployment logic at line #52-104
+- make another branch ```europa```
+- Europa ```prod``` will be hardcoded to 1 ```airdropv2.sol``` deployed contract(static address). No need to mint additional contracts(per user)
+- grant ```deployer factory contract``` permission
 
 
 

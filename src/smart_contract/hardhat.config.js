@@ -11,11 +11,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-// Change this when deploying to different networks
-const defaultNetwork = "skaleTestnet";
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+
+
+const defaultNetwork = "skale";// or skaleW
+ 
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -32,19 +32,15 @@ module.exports = {
     },
     skaleMainnet: {
       url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
-      accounts: [process.env.ADMIN_PKEY_TESTNET]
+      accounts: [process.env.ADMIN_PKEY_FANCY],
     },
-    skaleTestnet: {
+    skale: {
       url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
-      accounts: [process.env.MM_PKEY_TESTNET]
+      accounts: [process.env.ADMIN_PKEY_FANCY],
     },
-    skaleTestnet2: {
+    skaleW: {
       url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
-      accounts: [process.env.ADMIN_PKEY_WHISPER]
-    },
-    rinkeby: {
-      url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-      accounts: [process.env.MM_PKEY_TESTNET]
+      accounts: [process.env.ADMIN_PKEY_WHISPER],
     },
   },
   solidity: {

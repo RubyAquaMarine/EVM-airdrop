@@ -34,10 +34,12 @@
 
 # Instructions: latest
 - git clone, cd airdropper
-- npm install , npm run 
-- requires SC deployment, hardcode Airdrop address at line #87
-- Universal: Any evm network and any erc20 token can be used.
-- limitation for airdrop receiver list is subject to gasCosts on other networks.
+- ```npm install```
+- npm install in ```src/smart_contract```
+- [ ] requires SC deployment, hardcode Airdrop address at line #87 on ```src/script/app.js```
+- *Universal*: Any evm network and any erc20 token can be used.
+- *limitation* 2500 receivers
+- ```npm run start``` to start app
 
 ## PROD | Add new network
 app.js line 186

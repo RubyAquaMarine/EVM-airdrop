@@ -11,12 +11,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-
-
-
-const defaultNetwork = "skale";// or skaleW
+const defaultNetwork = "europa";
  
-
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
@@ -30,9 +26,9 @@ module.exports = {
         (you can put in a mnemonic here to set the deployer locally)
       */
     },
-    skaleMainnet: {
-      url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
-      accounts: [process.env.ADMIN_PKEY_FANCY],
+    europa: {
+      url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
+      accounts: [process.env.ADMIN_PKEY_TESTNET],
     },
     skale: {
       url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",

@@ -11,7 +11,7 @@ App = {
                 console.log("MetaMask Found")
                 App.web3 = new Web3(provider)
             } else {
-                App.web3 = new Web3(new Web3.providers.HttpProvider("https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague"))
+                App.web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.skalenodes.com/v1/elated-tan-skat"))
             }
             return App.initContracts()
         } catch (error) {
@@ -190,23 +190,25 @@ App = {
                     id: 42
                 }
                 break
-            case 2255010950618556:
+
+            case 2046399126:
                 return {
                     network: "Europa",
+                    url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
+                    id: 2046399126
+                }
+                break
+
+            case 2255010950618556:
+                return {
+                    network: "Fancy",
                     url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
                     id: 2255010950618556
                 }
                 break
-            case 132333505628089:
-                return {
-                    network: "Whisper",
-                    url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
-                    id: 132333505628089
-                }
-                break
+
             default:
                 console.log('This is an unknown networkID: ', App.networkId)
-            //setup default
         }
     },
 

@@ -6,3 +6,4 @@ RPC_LOCAL = http://localhost:8545
 RPC_SKALE = https://dappnet-api.skalenodes.com/v1/melodic-murzim
 RPC_SKALE_HUB = https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague
 RPC_SKALE_WHISPER = https://testnet-proxy.skalenodes.com/v1/whispering-turais
+RPC_EUROPA = https://mainnet.skalenodes.com/v1/elated-tan-skat

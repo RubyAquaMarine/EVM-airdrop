@@ -501,16 +501,16 @@ App = {
 
             // Calculating total sum of 'amounts' array items for approval amount
             totalAmount = parseFloat(amounts.reduce((a, b) => a + b).toFixed(2))
-            console.log("Total Amount to Airdrop: ", totalAmount)
+            console.error("Total Amount to Airdrop: ", totalAmount.toString())
 
             // do approval now (force each time)
             if (App.allowance < totalAmount || App.allowance == undefined || App.allowance != totalAmount) {
-                console.log("Approving Token Amount: ", totalAmount)
+                console.error("Approving Token Amount: ", App.web3.utils.toWei(totalAmount.toString(), 'ether'))
                 // approve
                 // string input : totalamoount (humanReadable)
                 // output : Number in wei
-                App.approvalAmount = Number(App.web3.utils.toWei(totalAmount.toString(), 'ether'))
-                console.log("do approval now: App.approvalAmount:", App.approvalAmount)
+                App.approvalAmount = App.web3.utils.toWei(totalAmount.toString(), 'ether')
+                console.error("do approval now: App.approvalAmount:", App.approvalAmount)
                 App.tokenInstance.methods.approve(App.airdropAddress, App.approvalAmount).send({ from: App.account })
                     .on("transactionHash", hash => {
                         console.log("txHash:", hash)
@@ -530,7 +530,8 @@ App = {
             // to wei
             amounts.forEach(myFunction)
             function myFunction(item, index, arr) {
-                arr[index] = Number(App.web3.utils.toWei(item.toString(), 'ether'))
+                arr[index] = App.web3.utils.toWei(item.toString(), 'ether')
+                console.error(arr[index])
             }
 
             //debug: these values should match for the airdrop to function properly

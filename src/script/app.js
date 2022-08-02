@@ -1,4 +1,4 @@
-
+const CHAIN_EUROPA = 2046399126;
 App = {
     init: async () => {
         return await App.initWeb3()
@@ -7,18 +7,37 @@ App = {
     initWeb3: async () => {
         try {
             const provider = await App.getProviderInstance()
+            let chainId;
             if (provider) {
-                console.log("MetaMask Found")
                 App.web3 = new Web3(provider)
+                chainId = await App.web3.eth.net.getId()
+                if (chainId != CHAIN_EUROPA) {
+                    await App.switchNetwork(CHAIN_EUROPA)
+                }
+                chainId = await App.web3.eth.net.getId()
+                console.error("(provider) MetaMask Found: connected to chainID: ", chainId)
             } else {
                 App.web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.skalenodes.com/v1/elated-tan-skat"))
+                chainId = await App.web3.eth.net.getId()
+                if (chainId != CHAIN_EUROPA) {
+                    await App.switchNetwork(CHAIN_EUROPA)
+                }
+                chainId = await App.web3.eth.net.getId()
+                console.error("MetaMask Found: connected to chainID: ", chainId)
             }
             return App.initContracts()
         } catch (error) {
-            alert("Enable to access to Metamask")
+            alert("Unable to access to Metamask")
             console.log(error)
         }
     },
+
+    /*
+const getNetworkId = async () => {
+  const currentChainId = await web3.eth.net.getId()
+  return currentChainId
+}
+    */
 
     getProviderInstance: async () => {
         // 1. Try getting modern provider
@@ -46,9 +65,7 @@ App = {
     initContracts: async () => {
         App.networkId = await App.web3.eth.net.getId()
         App.ownerAddressB = await App.web3.eth.getAccounts()
-        console.log('User Address:', App.ownerAddressB[0])
         App.gas_price = await App.web3.eth.getGasPrice()
-        console.log('Gas Price:', App.gas_price.toString())
 
         App.sc_abi = [
             {
@@ -111,6 +128,7 @@ App = {
         $('#contract-address').text(App.airdropAddress)
     },
 
+    // checks the app.detectNetwork
     showTransactions: () => {
         const data = JSON.parse(localStorage.getItem("transactions"))
         let rows = document.createDocumentFragment()
@@ -153,62 +171,15 @@ App = {
         }
     },
 
+    // only used for showing previous airdrops
     detectNetwork: () => {
-        switch (App.networkId) {
-            case 1:
-                return {
-                    network: "Mainnet",
-                    url: "https://etherscan.io/",
-                    id: 1
-                }
-                break
-            case 2:
-                return {
-                    network: "Morden",
-                    url: "https://mordenexplorer.ethernode.io/",
-                    id: 2
-                }
-                break
-            case 3:
-                return {
-                    network: "Ropsten",
-                    url: "https://ropsten.etherscan.io/",
-                    id: 3
-                }
-                break
-            case 4:
-                return {
-                    network: "Rinkeby",
-                    url: "https://rinkeby.etherscan.io/",
-                    id: 4
-                }
-                break
-            case 42:
-                return {
-                    network: "Kovan",
-                    url: "https://kovan.etherscan.io/",
-                    id: 42
-                }
-                break
 
-            case 2046399126:
-                return {
-                    network: "Europa",
-                    url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
-                    id: 2046399126
-                }
-                break
+        $('#networkStatus').text(App.networkId)
 
-            case 2255010950618556:
-                return {
-                    network: "Fancy",
-                    url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
-                    id: 2255010950618556
-                }
-                break
-
-            default:
-                console.log('This is an unknown networkID: ', App.networkId)
+        return {
+            network: "Europa",
+            url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
+            id: 2046399126
         }
     },
 
@@ -228,6 +199,7 @@ App = {
         App.showAllowance()
         App.showTransactions()
     },
+
     saveTokenAddress: async () => {
         App.tokenAddress = $('#userTokenSelect').val()
         console.log('saveTokenAddress : ', App.tokenAddress);
@@ -456,7 +428,7 @@ App = {
         // hardcoded address within
         App.tokenInstance = new App.web3.eth.Contract(App.token_abi, App.tokenAddress)
         App.tokenSymbol = await App.tokenInstance.methods.symbol().call()
-        console.log('saveTokenAddress Symbol  : ', App.tokenSymbol);
+        console.log('saveTokenAddress Symbol  : ', App.tokenSymbol.toString());
         App.render()
     },
 
@@ -469,7 +441,7 @@ App = {
             // Replacing and creating 'receivers' array
             $('#receivers').val().split(',').forEach((address, i) => {
                 if (/\S/.test(address)) {
-                    console.log("address:", address)
+
                     address = address.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '')
 
                     // Checksuming the addresses
@@ -489,7 +461,7 @@ App = {
                 if (Number(value) !== 0) {
                     return Number(value)
                 } else {
-                    throw ('Founded  number 0 in amounts, please remove it');
+                    throw ('Found number 0 in amounts, please remove it');
                 }
             })
             console.log("amounts:", amounts)
@@ -504,7 +476,8 @@ App = {
             console.error("Total Amount to Airdrop: ", totalAmount.toString())
 
             // do approval now (force each time)
-            if (App.allowance < totalAmount || App.allowance == undefined || App.allowance != totalAmount) {
+            //|| App.allowance != totalAmount - remove, this cause issue
+            if (App.allowance < totalAmount || App.allowance == undefined) {
                 console.error("Approving Token Amount: ", App.web3.utils.toWei(totalAmount.toString(), 'ether'))
                 // approve
                 // string input : totalamoount (humanReadable)
@@ -513,7 +486,7 @@ App = {
                 console.error("do approval now: App.approvalAmount:", App.approvalAmount)
                 App.tokenInstance.methods.approve(App.airdropAddress, App.approvalAmount).send({ from: App.account })
                     .on("transactionHash", hash => {
-                        console.log("txHash:", hash)
+                        console.log("approval: txHash:", hash)
                     })
                     .on("receipt", receipt => {
                         App.alertInReload(false)
@@ -534,12 +507,8 @@ App = {
                 console.error(arr[index])
             }
 
-            //debug: these values should match for the airdrop to function properly
-            console.log("ALLOW: " + App.allowance + " <=?airdrop?=> AMOUNT: " + totalAmount + " || Final Amounts:", amounts)
-
             // If allowance tokens more than amounts sum then continue
             if (App.allowance >= totalAmount) {
-                console.log("READY")
 
                 // Calling the method from airdrop smart contract
 
@@ -562,7 +531,7 @@ App = {
                         App.alertInReload(false)
 
                         // update variables
-                        App.allowance -= totalAmount
+                        App.allowance = 0;
                         App.isTokenApproved = 'Not Approved'
 
                         const hash = receipt.transactionHash
@@ -575,7 +544,7 @@ App = {
                     })
                     .on("error", error => {
                         App.alertInReload(false)
-                        throw ("Tx was failed")
+                        throw ("Tx failed: ", error)
                     })
             }
 
@@ -586,8 +555,49 @@ App = {
         } catch (error) {
             alert(error)
         }
+    },
+
+    switchNetwork: async (chainId) => {
+
+
+        try {
+            await App.web3.currentProvider.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: App.web3.utils.toHex(chainId) }],
+            });
+        } catch (switchError) {
+            // This error code indicates that the chain has not been added to MetaMask.
+            if (switchError.code === 4902) {
+                await App.addNewNetworkInfo()
+                console.error("adding new network to metamask")
+            }
+        }
+
+    },
+
+
+    addNewNetworkInfo: async () => {
+        // then use this:
+       await  App.web3.currentProvider.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+                chainId: App.web3.utils.toHex(CHAIN_EUROPA),
+                chainName: 'Europa Chain',
+                nativeCurrency: {
+                    name: 'sFuel',
+                    symbol: 'sFuel',
+                    decimals: 18
+                },
+                rpcUrls: ['https://mainnet.skalenodes.com/v1/elated-tan-skat/'],
+                blockExplorerUrls: ['https://elated-tan-skat.explorer.mainnet.skalenodes.com/']
+            }]
+        })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 }
+
 
 $(window).on("load", () => {
     $.ready.then(() => {

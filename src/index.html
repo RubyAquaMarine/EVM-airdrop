@@ -13,10 +13,19 @@
 <body>
 
     <div class="container p-5">
-        <h1 class="text-center mb-5">Instant ERC20 Token Airdrop</h1>
+        <h1 class="text-center mb-5">Europa Hub Token Airdrop</h1>
         <div class="row mb-5">
             <div class="col-lg-12">
-                <p class="text-dark">AirDrop Contract deployed to Address: <b id="contract-address"></b></p>
+
+                <p class="text-dark">
+                    1. Enter token Address that will be used for the airdrop<br>
+                    2. Click 'Save Token Address'<br>
+                    3. Paste in the addresses and then amounts<br>
+                    4. Click 'Proceed' and 'Confirm' within Metamask to approve the token transfer<br>
+                    5. Click 'Proceed' again and 'Confirm' within Metamask to airdrop tokens<br>
+                    6. Wait for tx Status to change from 'Pending' to 'Done'<br>
+                </p>
+                
                 <div class="form-group">
                     <label class="h3" for="userTokenSelect">Enter Token Address to Airdrop</label>
                     <textarea class="form-control" rows="1" id="userTokenSelect" placeholder="ex: 0x...."></textarea>
@@ -24,20 +33,6 @@
                 <button id="submit" type="button" onclick="App.saveTokenAddress()"
                     class="btn btn-primary btn-block btn-lg">Save Token Address
                 </button>
-                <p class="text-dark">1. Confirm AirDrop Contact deployment within metamask<br>
-                    2. Enter token Address that will be used for the transfer<br>
-                    3. Click 'Save Token Address'<br>
-                    4. Smile, this is easy<br>
-                    5. Paste the addresses and then amounts<br>
-                    6. Separate the items with a comma, as in the example<br>
-                    7. Length of receivers and amounts must be equal<br>
-                    8. Click 'Proceed' and 'Confirm' within Metamask<br>
-                    9. Approval Status will update to 'Tokens Approved'<br>
-                    10. Click 'Proceed' again and 'Confirm' within Metamask to airdrop tokens<br>
-                    11. Wait for tx Status to change from 'Pending' to 'Done'<br>
-                </p>
-                <p class="text-dark"><b>You can send tokens back to your own wallet for testing purposes:</b></p>
-                <p class="text-dark"> Your address: <b id="owner-wallet"></b></p>
             </div>
         </div>
         <div class="row mb-5">

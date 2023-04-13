@@ -23,6 +23,9 @@ app.js line 186
 - add another network by using the ```case``` number matching the  ```chainID```
 - add Europa [x] rpc
 
+## Deployments
+- stagingv3: Europa - `0xDcD7E0d844D2a2e6bB1949A90d00867452ADBF44`
+
 
 
 

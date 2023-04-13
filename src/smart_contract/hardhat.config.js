@@ -11,7 +11,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   }
 });
 
-const defaultNetwork = "europa";
+const defaultNetwork = "stagingv3";
  
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -30,13 +30,13 @@ module.exports = {
       url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
       accounts: [process.env.ADMIN_PKEY_TESTNET],
     },
-    skale: {
+    stagingv2: {
       url: "https://testnet-proxy.skalenodes.com/v1/fancy-rasalhague",
-      accounts: [process.env.ADMIN_PKEY_FANCY],
+      accounts: [process.env.ADMIN_PKEY_STAGING],
     },
-    skaleW: {
-      url: "https://testnet-proxy.skalenodes.com/v1/whispering-turais",
-      accounts: [process.env.ADMIN_PKEY_WHISPER],
+    stagingv3: {
+      url: "https://staging-v3.skalenodes.com/v1/staging-legal-crazy-castor",
+      accounts: [process.env.ADMIN_PKEY_STAGING],
     },
   },
   solidity: {

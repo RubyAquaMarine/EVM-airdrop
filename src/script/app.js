@@ -1,4 +1,11 @@
-const CHAIN_EUROPA = 2046399126;
+const CHAIN_EUROPA = 476158412;
+const CHAIN_RPC = 'https://staging-v3.skalenodes.com/v1/staging-legal-crazy-castor';
+const CHAIN_EXPLORER = "https://staging-legal-crazy-castor.explorer.staging-v3.skalenodes.com/"
+const CONTRACT_ADDRESS = '0xDcD7E0d844D2a2e6bB1949A90d00867452ADBF44';
+/*
+const CHAIN_EUROPA = 2046399126;// PROD
+const CHAIN_RPC = 'https://mainnet.skalenodes.com/v1/elated-tan-skat';// PROD
+*/
 App = {
     init: async () => {
         return await App.initWeb3()
@@ -17,7 +24,7 @@ App = {
                 chainId = await App.web3.eth.net.getId()
                 console.error("(provider) MetaMask Found: connected to chainID: ", chainId)
             } else {
-                App.web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.skalenodes.com/v1/elated-tan-skat"))
+                App.web3 = new Web3(new Web3.providers.HttpProvider(CHAIN_RPC))
                 chainId = await App.web3.eth.net.getId()
                 if (chainId != CHAIN_EUROPA) {
                     await App.switchNetwork(CHAIN_EUROPA)
@@ -101,8 +108,8 @@ const getNetworkId = async () => {
         /*
         * PROD | Hardcode Airdrop contract address here: App.airdropAddress
         */
-        App.airdropAddress = "0x1F27e93D6bc67F7B033a17a1c4F01e03Bba24bB9"
-        console.log('App.airdropAddress:', App.airdropAddress)
+        App.airdropAddress = CONTRACT_ADDRESS;
+        console.log('----- App.airdropAddress:', App.airdropAddress)
         App.airdropInstance = new App.web3.eth.Contract(App.sc_abi, App.airdropAddress)
         return App.initVariables()
     },
@@ -178,8 +185,8 @@ const getNetworkId = async () => {
 
         return {
             network: "Europa",
-            url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
-            id: 2046399126
+            url: CHAIN_RPC,
+            id: CHAIN_EUROPA
         }
     },
 
@@ -456,15 +463,18 @@ const getNetworkId = async () => {
                 }
             })
 
+            console.log("Addresses are ok:", receivers.length)
+
             // Replacing and creating 'amounts' array
-            amounts = $('#amounts').val().split(',').map(value => {
+            amounts =  $('#amounts').val().split(',').map(value => {//amounts =
                 if (Number(value) !== 0) {
+                   // amounts.push(value);
                     return Number(value)
                 } else {
                     throw ('Found number 0 in amounts, please remove it');
                 }
             })
-            console.log("amounts:", amounts)
+            console.log("amounts:", amounts.length)
 
             // Checking arrays length and validities
             if (receivers.length == 0 || amounts.length == 0 || receivers.length != amounts.length) {
@@ -473,17 +483,19 @@ const getNetworkId = async () => {
 
             // Calculating total sum of 'amounts' array items for approval amount
             totalAmount = parseFloat(amounts.reduce((a, b) => a + b).toFixed(2))
-            console.error("Total Amount to Airdrop: ", totalAmount.toString())
+            
+
+            console.error("App Allowance: ", typeof App.allowance, " amount" , App.allowance)
 
             // do approval now (force each time)
             //|| App.allowance != totalAmount - remove, this cause issue
             if (App.allowance < totalAmount || App.allowance == undefined) {
-                console.error("Approving Token Amount: ", App.web3.utils.toWei(totalAmount.toString(), 'ether'))
-                // approve
-                // string input : totalamoount (humanReadable)
-                // output : Number in wei
-                App.approvalAmount = App.web3.utils.toWei(totalAmount.toString(), 'ether')
-                console.error("do approval now: App.approvalAmount:", App.approvalAmount)
+               
+                App.approvalAmount = App.web3.utils.toWei(totalAmount.toString(), 'ether')// WEI AMOUNT
+
+                console.error("Approval Amount", App.approvalAmount)
+                console.error("Total Amount (ether) ", totalAmount.toString())
+
                 App.tokenInstance.methods.approve(App.airdropAddress, App.approvalAmount).send({ from: App.account })
                     .on("transactionHash", hash => {
                         console.log("approval: txHash:", hash)
@@ -500,7 +512,7 @@ const getNetworkId = async () => {
                     })
             }
 
-            // to wei
+            // change all input amounts from csv to wei
             amounts.forEach(myFunction)
             function myFunction(item, index, arr) {
                 arr[index] = App.web3.utils.toWei(item.toString(), 'ether')
@@ -523,8 +535,12 @@ const getNetworkId = async () => {
                             amount: totalAmount
                         }
                         let transactions = JSON.parse(localStorage.getItem("transactions"))
-                        transactions.unshift(newTx)
-                        localStorage.setItem("transactions", JSON.stringify(transactions))
+                        if (transactions) {
+                            // transactions.concat(newTx)
+                             transactions.unshift(newTx)
+                            localStorage.setItem("transactions", JSON.stringify(transactions))
+                        }
+
                         App.showTransactions()
                     })
                     .on("receipt", receipt => {
@@ -547,19 +563,12 @@ const getNetworkId = async () => {
                         throw ("Tx failed: ", error)
                     })
             }
-
-            //   else {
-            //       throw ('Click ok and then Confirm within Metamask. This will give the smart contract access to transfer the token on your behalf')
-            //   }
-
         } catch (error) {
             alert(error)
         }
     },
 
     switchNetwork: async (chainId) => {
-
-
         try {
             await App.web3.currentProvider.request({
                 method: 'wallet_switchEthereumChain',
@@ -572,13 +581,12 @@ const getNetworkId = async () => {
                 console.error("adding new network to metamask")
             }
         }
-
     },
 
 
     addNewNetworkInfo: async () => {
         // then use this:
-       await  App.web3.currentProvider.request({
+        await App.web3.currentProvider.request({
             method: 'wallet_addEthereumChain',
             params: [{
                 chainId: App.web3.utils.toHex(CHAIN_EUROPA),
@@ -588,8 +596,8 @@ const getNetworkId = async () => {
                     symbol: 'sFuel',
                     decimals: 18
                 },
-                rpcUrls: ['https://mainnet.skalenodes.com/v1/elated-tan-skat/'],
-                blockExplorerUrls: ['https://elated-tan-skat.explorer.mainnet.skalenodes.com/']
+                rpcUrls: [CHAIN_RPC],
+                blockExplorerUrls: [CHAIN_EXPLORER]
             }]
         })
             .catch((error) => {

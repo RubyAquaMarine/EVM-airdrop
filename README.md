@@ -1,4 +1,7 @@
 # ERC20 token airdrop
+
+Supports `ERC20` Tokens
+
 1. Connect to metamask
 2. Enter token Address that will be used for the transfer
 3. Click ```Save Token Address```
@@ -11,7 +14,7 @@
 10. Wait for tx Status to change from ```Pending``` to ```Done```
 
 # Instructions:
-- git clone, cd airdropper
+- git clone, cd /evm-airdrop
 - ```npm install```
 - npm install in ```src/smart_contract```
 - [ ] requires SC deployment, hardcode Airdrop address at line #87 on ```src/script/app.js```
@@ -26,6 +29,18 @@ app.js line 186
 
 ## Deployments
 - stagingv3: Europa - `0xDcD7E0d844D2a2e6bB1949A90d00867452ADBF44`
+- mainnet : Europa - `0x1f27e93d6bc67f7b033a17a1c4f01e03bba24bb9`
+
+## GasLimit 160 million
+
+csv with 800 wallet addresses 
+`Gas Limit
+159,999,999
+ Gas Used by Transaction
+21,415,757 | 13.38%
+`
+
+Skale can handle 8x more `erc20` transfers ^^ [tx](https://elated-tan-skat.explorer.mainnet.skalenodes.com/tx/0x9208a0ea52bef9aafe255a134758dc0645651595286043c72f204de6e5971079/token-transfers)
 
 
 

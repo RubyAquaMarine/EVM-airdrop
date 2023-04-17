@@ -1,11 +1,14 @@
+/*
 const CHAIN_EUROPA = 476158412;
 const CHAIN_RPC = 'https://staging-v3.skalenodes.com/v1/staging-legal-crazy-castor';
 const CHAIN_EXPLORER = "https://staging-legal-crazy-castor.explorer.staging-v3.skalenodes.com/"
 const CONTRACT_ADDRESS = '0xDcD7E0d844D2a2e6bB1949A90d00867452ADBF44';
-/*
+*/
+
 const CHAIN_EUROPA = 2046399126;// PROD
 const CHAIN_RPC = 'https://mainnet.skalenodes.com/v1/elated-tan-skat';// PROD
-*/
+const CONTRACT_ADDRESS = '0x1f27e93d6bc67f7b033a17a1c4f01e03bba24bb9';
+
 App = {
     init: async () => {
         localStorage.clear();

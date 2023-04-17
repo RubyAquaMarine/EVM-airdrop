@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Easy and clear airdrop dapp",
   "main": "app.js",
+  "engines": {
+    "node": "v16.19.0",
+    "npm": "^8.19.2"
+  },
   "directories": {
     "lib": "lib"
   },

@@ -16,6 +16,7 @@
 - npm install in ```src/smart_contract```
 - [ ] requires SC deployment, hardcode Airdrop address at line #87 on ```src/script/app.js```
 - cd/ into ```./src/smart_contract``` and ```npx hardhat run scripts/deploy.js``` , copy address from terminal and paste into ./scr/script/app.js
+- cd/ into ```src/scripts/app.js``` and adjust ```CHAIN``` constants.
 - ```npm run start``` to start app
 
 ## PROD | Add new network

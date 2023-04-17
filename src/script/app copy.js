@@ -8,7 +8,6 @@ const CHAIN_RPC = 'https://mainnet.skalenodes.com/v1/elated-tan-skat';// PROD
 */
 App = {
     init: async () => {
-        localStorage.clear();
         return await App.initWeb3()
     },
 
@@ -40,57 +39,12 @@ App = {
         }
     },
 
-    showTransactions: () => {
-        const data = JSON.parse(localStorage.getItem("transactions"))
-        // object to array 
-        const newArray = Object.entries(data);
-        const length = newArray.length;
-        let rows = document.createDocumentFragment()
-
-        if (length !== 0) {
-            $("#txTable tbody").empty()
-            const { url } = App.detectNetwork()
-            for (let i = 0; i < length; i++) {
-
-                const getData = newArray[i];
-                const txData = getData[1];
-
-                if (!txData?.hash) {
-                    continue;
-                }
-
-                const row = document.createElement("tr")
-                row.setAttribute("scope", "row")
-
-                const index = document.createElement("th")
-                index.appendChild(document.createTextNode(`${i}`))
-                row.appendChild(index)
-
-                const hash = document.createElement("td")
-                const hyperlink = document.createElement("a")
-                const linkText = document.createTextNode(`${txData.hash}`)
-                hyperlink.appendChild(linkText)
-                hyperlink.href = `${url}/tx/${txData.hash}`
-                hash.appendChild(hyperlink)
-                row.appendChild(hash)
-
-                const status = document.createElement("td")
-                status.appendChild(document.createTextNode(`${txData.status}`))
-                row.appendChild(status)
-
-                const users = document.createElement("td")
-                users.appendChild(document.createTextNode(`${txData.users}`))
-                row.appendChild(users)
-
-                const amount = document.createElement("td")
-                amount.appendChild(document.createTextNode(`${txData.amount}`))
-                row.appendChild(amount)
-
-                rows.appendChild(row)
-            }
-            $("#txTable tbody").append(rows)
-        }
-    },
+    /*
+const getNetworkId = async () => {
+  const currentChainId = await web3.eth.net.getId()
+  return currentChainId
+}
+    */
 
     getProviderInstance: async () => {
         // 1. Try getting modern provider
@@ -155,7 +109,7 @@ App = {
         * PROD | Hardcode Airdrop contract address here: App.airdropAddress
         */
         App.airdropAddress = CONTRACT_ADDRESS;
-        console.log('Airdrop Smart Contract Address:', App.airdropAddress)
+        console.log('----- App.airdropAddress:', App.airdropAddress)
         App.airdropInstance = new App.web3.eth.Contract(App.sc_abi, App.airdropAddress)
         return App.initVariables()
     },
@@ -163,13 +117,10 @@ App = {
     initVariables: async () => {
         App.ownerAddress = App.ownerAddressB[0]
         App.isTokenApproved = 'Not Approved'
-        console.log('Connected Wallet Address:', App.ownerAddress)
+        console.log('App.ownerAddress:', App.ownerAddress)
         App.account = await App.web3.eth.getAccounts().then(accounts => accounts[0])
         if (localStorage.getItem("transactions") === null) {
             localStorage.setItem("transactions", JSON.stringify([]))
-            console.log('No txs exist within localStorage:cache')
-        } else {
-            console.log('render ShowTransactions:')
         }
         return App.render()
     },
@@ -182,6 +133,49 @@ App = {
         $('#token-approval').text(App.isTokenApproved)
         $('#owner-wallet').text(App.ownerAddress)
         $('#contract-address').text(App.airdropAddress)
+    },
+
+    // checks the app.detectNetwork
+    showTransactions: () => {
+        const data = JSON.parse(localStorage.getItem("transactions"))
+        let rows = document.createDocumentFragment()
+        if (data.length !== 0) {
+            $("#txTable tbody").empty()
+            const { url } = App.detectNetwork()
+            for (let i = 0; i < data.length; i++) {
+                const txData = data[i]
+
+                const row = document.createElement("tr")
+                row.setAttribute("scope", "row")
+
+                const index = document.createElement("th")
+                index.appendChild(document.createTextNode(`${i}`))
+                row.appendChild(index)
+
+                const hash = document.createElement("td")
+                const hyperlink = document.createElement("a")
+                const linkText = document.createTextNode(`${txData.hash}`)
+                hyperlink.appendChild(linkText)
+                hyperlink.href = `${url}/tx/${txData.hash}`
+                hash.appendChild(hyperlink)
+                row.appendChild(hash)
+
+                const status = document.createElement("td")
+                status.appendChild(document.createTextNode(`${txData.status}`))
+                row.appendChild(status)
+
+                const users = document.createElement("td")
+                users.appendChild(document.createTextNode(`${txData.users}`))
+                row.appendChild(users)
+
+                const amount = document.createElement("td")
+                amount.appendChild(document.createTextNode(`${txData.amount}`))
+                row.appendChild(amount)
+
+                rows.appendChild(row)
+            }
+            $("#txTable tbody").append(rows)
+        }
     },
 
     // only used for showing previous airdrops
@@ -215,6 +209,7 @@ App = {
 
     saveTokenAddress: async () => {
         App.tokenAddress = $('#userTokenSelect').val()
+        console.log('saveTokenAddress : ', App.tokenAddress);
         App.token_abi = [
             {
                 "constant": true,
@@ -437,27 +432,11 @@ App = {
                 "type": "event"
             }
         ]
+        // hardcoded address within
         App.tokenInstance = new App.web3.eth.Contract(App.token_abi, App.tokenAddress)
         App.tokenSymbol = await App.tokenInstance.methods.symbol().call()
-        console.log('saved TokenAddress + Symbol  : ', App.tokenAddress, App.tokenSymbol.toString());
+        console.log('saveTokenAddress Symbol  : ', App.tokenSymbol.toString());
         App.render()
-    },
-
-    // Define a function to save a new transaction to local storage
-    saveTransactionToLocalStorage: transaction => {
-      
-        try {
-            // Get the current list of transactions from local storage
-            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-
-            // Add the new transaction to the list
-            transactions.push(transaction);
-
-            // Update the transactions in local storage
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-        } catch (error) {
-            console.error(`Error saving transaction to local storage: ${error.message}`);
-        }
     },
 
     startAirdrop: () => {
@@ -484,16 +463,18 @@ App = {
                 }
             })
 
+            console.log("Addresses are ok:", receivers.length)
+
             // Replacing and creating 'amounts' array
-            amounts = $('#amounts').val().split(',').map(value => {//amounts =
+            amounts =  $('#amounts').val().split(',').map(value => {//amounts =
                 if (Number(value) !== 0) {
-                    // amounts.push(value);
+                   // amounts.push(value);
                     return Number(value)
                 } else {
                     throw ('Found number 0 in amounts, please remove it');
                 }
             })
-
+            console.log("amounts:", amounts.length)
 
             // Checking arrays length and validities
             if (receivers.length == 0 || amounts.length == 0 || receivers.length != amounts.length) {
@@ -502,10 +483,14 @@ App = {
 
             // Calculating total sum of 'amounts' array items for approval amount
             totalAmount = parseFloat(amounts.reduce((a, b) => a + b).toFixed(2))
+            
 
-            // do approval (force each time)
+            console.error("App Allowance: ", typeof App.allowance, " amount" , App.allowance)
+
+            // do approval now (force each time)
+            //|| App.allowance != totalAmount - remove, this cause issue
             if (App.allowance < totalAmount || App.allowance == undefined) {
-
+               
                 App.approvalAmount = App.web3.utils.toWei(totalAmount.toString(), 'ether')// WEI AMOUNT
 
                 console.error("Approval Amount", App.approvalAmount)
@@ -549,8 +534,12 @@ App = {
                             users: receivers.length,
                             amount: totalAmount
                         }
-
-                        App.saveTransactionToLocalStorage(newTx);
+                        let transactions = JSON.parse(localStorage.getItem("transactions"))
+                        if (transactions) {
+                            // transactions.concat(newTx)
+                             transactions.unshift(newTx)
+                            localStorage.setItem("transactions", JSON.stringify(transactions))
+                        }
 
                         App.showTransactions()
                     })
